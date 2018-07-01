@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { map } from 'rxjs/operators';
+import { map, debounceTime } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export enum SearchType {
   Hot, // 热搜
@@ -62,26 +63,21 @@ export class VideoEngineService {
 
  searchConfig: SearchConfig
 
- private constructor(private http: HttpClient) {
+ private constructor(private http: HttpClient) {}
 
- }
-
- public getInstance(searchType: SearchType, engine: Engines, query?: string) {
-   console.log('searchType:', searchType);
-
+ public getInstance(searchType: SearchType, engine: Engines): VideoEngineService {
    this.searchConfig = VideoEngineService.engines.find(({ id }) => id === engine)[searchType];
 
-   return this
-    .make(query)
-    .pipe(
-      map(response => this.searchConfig.format(response))
-    )
+   return this;
  }
 
- private make(query: string) {
+ public search(query?: string): Observable<string[]> {
   const searchConfig = <SuggestionSearchConfig>this.searchConfig;
   const querystring = query ? (this.searchConfig.url.includes('?') ? '&' : '?' + `${searchConfig.keyword}=${query}`) : '';
 
-  return this.http.jsonp(`${this.searchConfig.url}${querystring}`, this.searchConfig.callbackParam);
+  return this.http.jsonp(`${this.searchConfig.url}${querystring}`, this.searchConfig.callbackParam)
+    .pipe(
+      map(response => this.searchConfig.format(response))
+    );
  }
 }

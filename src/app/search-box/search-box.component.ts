@@ -21,12 +21,12 @@ export class SearchBoxComponent implements OnInit {
    * 显示热搜
    */
   ngOnInit() {
-    this.suggestions = this.videoEngineService.getInstance(SearchType.Hot, this.engine);
+    this.suggestions = this.videoEngineService.getInstance(SearchType.Hot, this.engine).search();
   }
 
   search(value) {
     this.query = value;
 
-    this.suggestions = this.videoEngineService.getInstance(SearchType.Suggestion, this.engine, this.query);
+    this.suggestions = this.videoEngineService.getInstance(SearchType.Suggestion, this.engine).search(this.query);
   }
 }
