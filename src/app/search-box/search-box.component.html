@@ -1,3 +1,20 @@
-<p>
-  search-box works!
-</p>
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <input matInput [(value)]="query" #input (input)="search(input.value)">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select [(value)]="engine">
+      <mat-option value="Engines.Youku">优酷</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <p>search engine: {{Engines[engine]}}</p>
+  <p>search query: {{query}}</p>
+</form>
+
+<ul>
+  <li *ngFor="let suggestion of suggestions | async">
+    {{ suggestion }}
+  </li>
+</ul>
