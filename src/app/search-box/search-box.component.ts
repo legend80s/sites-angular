@@ -2,10 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { debounce } from "lodash";
 import { Engines, VideoEngineService, SearchDriver, SearchType, ISuggestion } from '../video-engine.service';
 
+const SEARCH_PAGE_CONFIG = {
+  [Engines.Youku]: {
+    url: 'http://so.youku.com/search_video/q_'
+  }
+}
+
 @Component({
   selector: 'app-search-box',
   templateUrl: './search-box.component.html',
-  styleUrls: ['./search-box.component.css']
+  styleUrls: ['./search-box.component.scss']
 })
 export class SearchBoxComponent implements OnInit {
   private static DEFAULT_ENGINE = Engines.Youku
@@ -14,7 +20,7 @@ export class SearchBoxComponent implements OnInit {
   public Engines = Engines
   public currentEngine = SearchBoxComponent.DEFAULT_ENGINE;
 
-  public suggestions: ISuggestion[];
+  public suggestions: ISuggestion[] = [];
   private hots: ISuggestion[];
   private driver: SearchDriver;
 
@@ -34,7 +40,20 @@ export class SearchBoxComponent implements OnInit {
     this.showHottest();
   }
 
-  public undebouncedSearch(query: string): void {
+  public onSuggestionClick(suggestion: ISuggestion) {
+    if (this.query !== suggestion.value) {
+      this.query = suggestion.value;
+      this.showSuggestions(this.query)
+    }
+  }
+
+  public toSearchPage(query: string) {
+    const newWindow = window.open(SEARCH_PAGE_CONFIG[this.currentEngine].url + query);
+
+    newWindow.opener = null;
+  }
+
+  private undebouncedSearch(query: string): void {
     this.query = query;
 
     if (!query) {

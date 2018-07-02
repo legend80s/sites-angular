@@ -1,27 +1,35 @@
-<form class="example-form">
-  <mat-form-field class="example-full-width">
-    <input matInput [(value)]="query" #input (input)="search(input.value)">
-  </mat-form-field>
+<div class="search-box">
+  <form class="example-form" (submit)="$event.preventDefault();toSearchPage(input.value)">
+    <mat-form-field class="input-wrapper">
+      <input matInput [(value)]="query" #input (input)="search(input.value)">
+    </mat-form-field>
 
-  <mat-form-field>
-    <mat-select [(value)]="currentEngine">
-      <mat-option [(value)]="Engines.Youku">优酷</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field class="engines-wrapper">
+      <mat-select [(value)]="currentEngine">
+        <mat-option [(value)]="Engines.Youku">优酷</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <!-- <p>search engine: {{currentEngine}}</p> -->
-  <!-- <p>search engine: {{Engines[currentEngine]}}</p> -->
-  <!-- <p>search query: {{query}}</p> -->
-  <!-- <p>search searchType: {{SearchType[searchType]}}</p> -->
-</form>
+    <!-- <p>search engine: {{currentEngine}}</p> -->
+    <!-- <p>search engine: {{Engines[currentEngine]}}</p> -->
+    <!-- <p>search query: {{query}}</p> -->
+    <!-- <p>search searchType: {{SearchType[searchType]}}</p> -->
+  </form>
 
-<!-- 热搜 或 下拉提示 -->
-<!-- <p>suggestions: {{ suggestions | json }}</p> -->
-<ul
-  *ngIf="suggestions"
-  [ngClass]="{'hot': searchType === SearchType.Hot, 'suggestion': searchType === SearchType.Suggestion}"
->
-  <li *ngFor="let suggestion of suggestions">
-    {{ suggestion.value }}
-  </li>
-</ul>
+  <!-- 热搜 或 下拉提示 -->
+  <!-- <p>suggestions: {{ suggestions | json }}</p> -->
+
+  <mat-list
+    dense
+    *ngIf="suggestions.length"
+    class="suggestion-list"
+    [ngClass]="{'hot': searchType === SearchType.Hot, 'suggestion': searchType === SearchType.Suggestion}"
+  >
+    <mat-list-item
+      class="suggestion"
+      *ngFor="let suggestion of suggestions"
+      (click)="onSuggestionClick(suggestion)">
+      {{ suggestion.value }}
+    </mat-list-item>
+  </mat-list>
+</div>
