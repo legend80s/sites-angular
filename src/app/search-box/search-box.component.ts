@@ -5,6 +5,9 @@ import { Engines, VideoEngineService, SearchDriver, SearchType, ISuggestion } fr
 const SEARCH_PAGE_CONFIG = {
   [Engines.Youku]: {
     url: 'http://so.youku.com/search_video/q_'
+  },
+  [Engines.Tencent]: {
+    url: 'https://v.qq.com/x/search/?q='
   }
 }
 
@@ -53,6 +56,17 @@ export class SearchBoxComponent implements OnInit {
     newWindow.opener = null;
   }
 
+  public changeEngine(): void {
+    console.log('this.currentEngine:', this.currentEngine);
+    this.driver = this.videoEngineService.getInstance(this.currentEngine);
+
+    if (this.query) {
+      this.showSuggestions(this.query)
+    } else {
+      this.fetchHottest();
+    }
+  }
+
   private undebouncedSearch(query: string): void {
     this.query = query;
 
@@ -73,10 +87,14 @@ export class SearchBoxComponent implements OnInit {
     if (this.hots) {
       this.suggestions = this.hots;
     } else {
-      this.driver.getHottest().subscribe(data => {
-        this.suggestions = this.hots = data;
-      });
+     this.fetchHottest();
     }
+  }
+
+  private fetchHottest(): void {
+    this.driver.getHottest().subscribe(data => {
+      this.suggestions = this.hots = data;
+    });
   }
 
   /**

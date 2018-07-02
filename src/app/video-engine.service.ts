@@ -10,6 +10,7 @@ export enum SearchType {
 
 export enum Engines {
   Youku,
+  Tencent,
 };
 
 export interface ISuggestion {
@@ -117,7 +118,24 @@ export class SearchDriver {
   }
 }
 
+interface ITencentHotResult {
+  words: [
+    {
+      c_title: string,
+    }
+  ]
+}
+
+interface ITencentSuggestionResult {
+  item: [
+    {
+      word: string,
+    }
+  ]
+}
+
 const ENGINE_CONFIGS: IEngineConfig[] = [
+  // 优酷
   {
     id: Engines.Youku,
     hot: {
@@ -139,7 +157,36 @@ const ENGINE_CONFIGS: IEngineConfig[] = [
         return response.r.map(({ w }, index) => ({ id: index, value: w }));
       },
     }
-  }
+  },
+
+  // 腾讯视频
+  {
+    id: Engines.Tencent,
+    hot: {
+      url: 'https://data.video.qq.com/fcgi-bin/dataout?auto_id=938&otype=json',
+      callbackParam: 'callback',
+      format: (response) => {
+        console.log('response in format of Tencent hot:', response);
+
+        return (<ITencentHotResult>response).words.slice(0, 10).map(
+          ({ c_title }, index) => ({ id: index, value: c_title })
+        )
+      },
+    },
+    suggestion: {
+      url: 'https://s.video.qq.com/smartbox?callback=x&num=10&otype=json',
+      callbackParam: 'callback',
+      keyword: 'query',
+      format: (response) => {
+        console.log('response in format of Tencent suggesion:', response);
+        const item = (<ITencentSuggestionResult>response).item;
+
+        return !item ? [] : item.map(
+          ({ word }, index) => ({ id: index, value: word })
+        )
+      },
+    }
+  },
 ];
 
 /**
