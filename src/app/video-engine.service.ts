@@ -14,7 +14,7 @@ export enum Engines {
 };
 
 export interface ISuggestion {
-  id: string,
+  index: number,
   value: string,
 }
 
@@ -144,7 +144,7 @@ const ENGINE_CONFIGS: IEngineConfig[] = [
       format: (response) => {
         console.log('response in format of hot:', response);
 
-        return response.r.map(({ w }, index) => ({ id: index, value: w }));
+        return response.r.map(({ w }, index) => ({ index, value: w }));
       },
     },
     suggestion: {
@@ -154,7 +154,7 @@ const ENGINE_CONFIGS: IEngineConfig[] = [
       format: (response) => {
         console.log('response in format of suggesion:', response);
 
-        return response.r.map(({ w }, index) => ({ id: index, value: w }));
+        return response.r.map(({ w }, index) => ({ index, value: w }));
       },
     }
   },
@@ -169,7 +169,7 @@ const ENGINE_CONFIGS: IEngineConfig[] = [
         console.log('response in format of Tencent hot:', response);
 
         return (<ITencentHotResult>response).words.slice(0, 10).map(
-          ({ c_title }, index) => ({ id: index, value: c_title })
+          ({ c_title }, index) => ({ index, value: c_title })
         )
       },
     },
@@ -182,7 +182,7 @@ const ENGINE_CONFIGS: IEngineConfig[] = [
         const item = (<ITencentSuggestionResult>response).item;
 
         return !item ? [] : item.map(
-          ({ word }, index) => ({ id: index, value: word })
+          ({ word }, index) => ({ index, value: word })
         )
       },
     }
