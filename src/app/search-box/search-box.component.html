@@ -4,14 +4,15 @@
   </mat-form-field>
 
   <mat-form-field>
-    <mat-select [(value)]="engine">
-      <mat-option value="Engines.Youku">优酷</mat-option>
+    <mat-select [(value)]="currentEngine">
+      <mat-option [(value)]="Engines.Youku">优酷</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <p>search engine: {{Engines[currentEngine]}}</p>
-  <p>search query: {{query}}</p>
-  <p>search searchType: {{SearchType[searchType]}}</p>
+  <!-- <p>search engine: {{currentEngine}}</p> -->
+  <!-- <p>search engine: {{Engines[currentEngine]}}</p> -->
+  <!-- <p>search query: {{query}}</p> -->
+  <!-- <p>search searchType: {{SearchType[searchType]}}</p> -->
 </form>
 
 <!-- 热搜 或 下拉提示 -->
