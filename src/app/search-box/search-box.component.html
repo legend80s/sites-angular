@@ -9,12 +9,18 @@
     </mat-select>
   </mat-form-field>
 
-  <p>search engine: {{Engines[engine]}}</p>
+  <p>search engine: {{Engines[currentEngine]}}</p>
   <p>search query: {{query}}</p>
+  <p>search searchType: {{SearchType[searchType]}}</p>
 </form>
 
-<ul>
-  <li *ngFor="let suggestion of suggestions | async">
-    {{ suggestion }}
+<!-- 热搜 或 下拉提示 -->
+<!-- <p>suggestions: {{ suggestions | json }}</p> -->
+<ul
+  *ngIf="suggestions"
+  [ngClass]="{'hot': searchType === SearchType.Hot, 'suggestion': searchType === SearchType.Suggestion}"
+>
+  <li *ngFor="let suggestion of suggestions">
+    {{ suggestion.value }}
   </li>
 </ul>

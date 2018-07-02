@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Engines, SearchType, VideoEngineService } from '../video-engine.service';
-
+import { debounce } from "lodash";
+import { Engines, VideoEngineService, SearchDriver, SearchType, ISuggestion } from '../video-engine.service';
 
 @Component({
   selector: 'app-search-box',
@@ -9,24 +8,67 @@ import { Engines, SearchType, VideoEngineService } from '../video-engine.service
   styleUrls: ['./search-box.component.css']
 })
 export class SearchBoxComponent implements OnInit {
-  query = ''
-  Engines = Engines
-  engine = Engines.Youku
+  private static DEFAULT_ENGINE = Engines.Youku
 
-  private suggestions: Observable<string[]>;
+  public query = ''
+  public Engines = Engines
+  public currentEngine = SearchBoxComponent.DEFAULT_ENGINE;
 
-  constructor(private videoEngineService: VideoEngineService) {}
+  public suggestions: ISuggestion[];
+  private hots: ISuggestion[];
+  private driver: SearchDriver;
+
+  public SearchType = SearchType
+  public searchType = SearchType.Hot // 默认显示热搜
+  public search: Function;
+
+  constructor(private videoEngineService: VideoEngineService) {
+    this.driver = this.videoEngineService.getInstance(this.currentEngine);
+    this.search = debounce(this.undebouncedSearch, 500);
+  }
+
+  /**
+   * 默认显示热搜
+   */
+  ngOnInit() {
+    this.showHottest();
+  }
+
+  public undebouncedSearch(query: string): void {
+    this.query = query;
+
+    if (!query) {
+      this.showHottest();
+    } else {
+      this.showSuggestions(query);
+    }
+  }
 
   /**
    * 显示热搜
+   * 带缓存
    */
-  ngOnInit() {
-    this.suggestions = this.videoEngineService.getInstance(SearchType.Hot, this.engine).search();
+  private showHottest(): void {
+    this.searchType = SearchType.Hot;
+
+    if (this.hots) {
+      this.suggestions = this.hots;
+    } else {
+      this.driver.getHottest().subscribe(data => {
+        this.suggestions = this.hots = data;
+      });
+    }
   }
 
-  search(value) {
-    this.query = value;
+  /**
+   * 显示下拉提示
+   * @param query 查询词
+   */
+  private showSuggestions(query: string): void {
+    this.searchType = SearchType.Suggestion;
 
-    this.suggestions = this.videoEngineService.getInstance(SearchType.Suggestion, this.engine).search(this.query);
+    this.driver.search(query).subscribe(data => {
+      this.suggestions = data;
+    });
   }
 }

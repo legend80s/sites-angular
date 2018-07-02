@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { map, debounceTime } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 export enum SearchType {
@@ -8,25 +8,139 @@ export enum SearchType {
   Suggestion, // 根据用户输入反馈相应下拉提示
 }
 
-interface SearchConfig {
-  url: string,
-  callbackParam: string,
-  format(response: any): string[],
-}
-
-interface SuggestionSearchConfig extends SearchConfig {
-  keyword: string,
-}
-
-interface EngineConfig {
-  id: Engines,
-  [SearchType.Hot]: SearchConfig,
-  [SearchType.Suggestion]: SuggestionSearchConfig,
-}
-
 export enum Engines {
   Youku,
 };
+
+export interface ISuggestion {
+  id: string,
+  value: string,
+}
+
+interface IHotSearchable {
+  search(): Observable<ISuggestion[]>
+}
+
+interface ISuggestionSearchable {
+  search(query: string): Observable<ISuggestion[]>
+}
+
+interface ISearchConfig {
+  url: string,
+  callbackParam: string,
+  format(response: any): ISuggestion[],
+}
+
+interface ISuggestionConfig extends ISearchConfig {
+  keyword: string,
+}
+
+interface IEngineConfig {
+  id: Engines,
+  hot: ISearchConfig,
+  suggestion: ISuggestionConfig,
+}
+
+class MyHttpClient extends HttpClient {
+  jsonp(url: string, callbackParam: string, params: object = {}) {
+    return this.jsonp(MyHttpClient.buildUrl(url, params), callbackParam);
+  }
+
+  private static buildUrl(url: string, params: object): string {
+    const querystring = MyHttpClient.buildParams(params);
+    const prefix = url.includes('?') ? '&' : '?';
+
+    return `${url}${prefix}${querystring}`;
+  }
+
+  private static buildParams(query: object): string {
+    return Object.keys(query)
+      .reduce((acc, key) => acc.concat(`${key}=${query[key]}`), [])
+      .join('&');
+  }
+}
+
+class HotEngine implements IHotSearchable {
+  constructor(private http: MyHttpClient, private config: ISearchConfig) {}
+
+  search() {
+    return this.http.jsonp(`${this.config.url}`, this.config.callbackParam)
+      .pipe(
+        map(response => this.config.format(response))
+      );;
+  }
+}
+
+class SuggestionEngine implements ISuggestionSearchable {
+  constructor(private http: MyHttpClient, private config: ISuggestionConfig) {
+    this.config = config;
+  }
+
+  search(query: string) {
+    const config = this.config;
+
+    const prefix = config.url.includes('?') ? '&' : '?';
+    const querystring = `${prefix}${config.keyword}=${query}`;
+
+    return this.http.jsonp(`${config.url}${querystring}`, config.callbackParam)
+      .pipe(
+        map(response => config.format(response))
+      );
+  }
+}
+
+export class SearchDriver {
+  private hotEngine: HotEngine
+  private suggestionEngine: SuggestionEngine
+
+  constructor(
+    private http: MyHttpClient,
+    private hotConfig: ISearchConfig,
+    private suggestionConfig: ISuggestionConfig
+  ) {
+    this.hotEngine = new HotEngine(http, hotConfig);
+    this.suggestionEngine = new SuggestionEngine(http, suggestionConfig);
+  }
+
+  /**
+   * 热搜
+   */
+  getHottest() {
+    return this.hotEngine.search();
+  }
+
+  /**
+   * 下拉提示搜索
+   */
+  search(query: string) {
+    return this.suggestionEngine.search(query);
+  }
+}
+
+const ENGINE_CONFIGS: IEngineConfig[] = [
+  {
+    id: Engines.Youku,
+    hot: {
+      url: 'http://tip.soku.com/search_tip_1',
+      callbackParam: 'jsoncallback',
+      format: (response) => {
+        console.log('response in format of hot:', response);
+
+        return response.r.map(({ w }, index) => ({ id: index, value: w }));
+      },
+    },
+    suggestion: {
+      url: 'http://tip.soku.com/search_tip_1',
+      callbackParam: 'jsoncallback',
+      keyword: 'query',
+      format: (response) => {
+        console.log('response in format of suggesion:', response);
+
+        return response.r.map(({ w }, index) => ({ id: index, value: w }));
+      },
+    }
+  }
+];
 
 /**
 * 生成各大视频网站搜索引擎
@@ -36,48 +150,23 @@ export enum Engines {
   providedIn: 'root'
 })
 export class VideoEngineService {
- static engines: EngineConfig[] = [
-   {
-     id: Engines.Youku,
-     [SearchType.Hot]: {
-       url: 'http://tip.soku.com/search_tip_1',
-       callbackParam: 'jsoncallback',
-       format: (response) => {
-         console.log('response in format of hot:', response);
+  private cache = {};
+  private constructor(private http: HttpClient) {}
 
-         return response.r.map(({ w }) => w);
-       },
-     },
-     [SearchType.Suggestion]: {
-       url: 'http://tip.soku.com/search_tip_1',
-       callbackParam: 'jsoncallback',
-       keyword: 'query',
-       format: (response) => {
-         console.log('response in format of suggesion:', response);
+  /**
+   * 获取相应的搜索引擎实例
+   * lazy initiating
+   * @param engineId 搜索引擎，比如 Youku
+   */
+  public getInstance(engineId: Engines): SearchDriver {
+    if (this.cache[engineId]) {
+      return this.cache[engineId];
+    }
 
-         return response.r.map(({ w }) => w);
-       },
-     }
-   }
- ];
+    const { hot, suggestion } = ENGINE_CONFIGS.find(({ id }) => id === engineId);
 
- searchConfig: SearchConfig
+    this.cache[engineId] = new SearchDriver(this.http, hot, suggestion);
 
- private constructor(private http: HttpClient) {}
-
- public getInstance(searchType: SearchType, engine: Engines): VideoEngineService {
-   this.searchConfig = VideoEngineService.engines.find(({ id }) => id === engine)[searchType];
-
-   return this;
- }
-
- public search(query?: string): Observable<string[]> {
-  const searchConfig = <SuggestionSearchConfig>this.searchConfig;
-  const querystring = query ? (this.searchConfig.url.includes('?') ? '&' : '?' + `${searchConfig.keyword}=${query}`) : '';
-
-  return this.http.jsonp(`${this.searchConfig.url}${querystring}`, this.searchConfig.callbackParam)
-    .pipe(
-      map(response => this.searchConfig.format(response))
-    );
- }
+    return this.cache[engineId];
+  }
 }
