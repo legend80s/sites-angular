@@ -26,6 +26,30 @@
       &:hover {
         background-color: #eee;
       }
+
+      .rank {
+        width: 22px;
+        height: 22px;
+        margin-right: 1em;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        color: #fff;
+        background-color: #cacaca;
+        border-radius: 2px;
+
+        &.rank-1 {
+          background-color: #ff0d29;
+        }
+        &.rank-2 {
+          background-color: #ff920b;
+        }
+        &.rank-3 {
+          background-color: #ffc600;
+        }
+      }
     }
   }
 }

@@ -29,7 +29,7 @@
       class="suggestion"
       *ngFor="let suggestion of suggestions"
       (click)="onSuggestionClick(suggestion)">
-      {{ suggestion.value }}
+      <span class="rank rank-{{suggestion.id + 1}}">{{ suggestion.id }}</span>{{ suggestion.value }}
     </mat-list-item>
   </mat-list>
 </div>
