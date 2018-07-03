@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { debounce } from "lodash";
 import { Engines, VideoEngineService, SearchDriver, SearchType, ISuggestion } from '../video-engine.service';
 import { SuggestionService } from './suggestion.service';
+import { Subscription } from 'rxjs';
 
 const SEARCH_PAGE_CONFIG = {
   [Engines.Youku]: {
@@ -17,7 +18,7 @@ const SEARCH_PAGE_CONFIG = {
   templateUrl: './search-box.component.html',
   styleUrls: ['./search-box.component.scss']
 })
-export class SearchBoxComponent implements OnInit {
+export class SearchBoxComponent implements OnInit, OnDestroy {
   private static DEFAULT_ENGINE = Engines.Youku
 
   public query = ''
@@ -32,6 +33,9 @@ export class SearchBoxComponent implements OnInit {
   public searchType = SearchType.Hot // 默认显示热搜
   public search: Function;
 
+  querySubscription: Subscription;
+  toSearchPageQuerySubscription: Subscription;
+
   constructor(
     private videoEngineService: VideoEngineService,
     private suggestionService: SuggestionService
@@ -39,8 +43,8 @@ export class SearchBoxComponent implements OnInit {
     this.driver = this.videoEngineService.getInstance(this.currentEngine);
     this.search = debounce(this.undebouncedSearch, 500);
 
-    suggestionService.query$.subscribe((query: string) => this.setQuery(query));
-    suggestionService.toSearchPageQuery$.subscribe((query: string) => this.toSearchPage(query));
+    this.querySubscription = suggestionService.query$.subscribe((query: string) => this.setQuery(query));
+    this.toSearchPageQuerySubscription = suggestionService.toSearchPageQuery$.subscribe((query: string) => this.toSearchPage(query));
   }
 
   /**
@@ -48,6 +52,11 @@ export class SearchBoxComponent implements OnInit {
    */
   ngOnInit() {
     this.showHottest();
+  }
+
+  ngOnDestroy() {
+    this.querySubscription.unsubscribe();
+    this.toSearchPageQuerySubscription.unsubscribe();
   }
 
   private setQuery(query) {
