@@ -58,6 +58,12 @@ export class SearchBoxComponent implements OnInit {
   }
 
   private toSearchPage(query: string) {
+    // 因为 BehaviorService 默认会 emit 初始值
+    // 防止刷新页面自动跳转到空 query 的搜索页面
+    if (!query) {
+      return;
+    }
+
     const newWindow = window.open(SEARCH_PAGE_CONFIG[this.currentEngine].url + query);
 
     newWindow.opener = null;
