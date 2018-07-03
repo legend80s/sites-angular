@@ -1,0 +1,9 @@
+.suggestion-list {
+  position: absolute;
+  width: 100%;
+  padding-top: 0;
+  z-index: 2;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px #eee;
+  background-color: rgba($color: #ffffff, $alpha: 0.8);
+}

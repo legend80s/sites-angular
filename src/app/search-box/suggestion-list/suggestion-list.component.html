@@ -1,0 +1,13 @@
+<mat-list
+  dense
+  class="suggestion-list"
+  [ngClass]="{'common': searchType === SearchType.Suggestion, 'hot': searchType === SearchType.Hot}"
+>
+  <!-- <p>searchType: {{ searchType }}</p> -->
+  <!-- <p>suggestions: {{ suggestions }}</p> -->
+
+  <app-suggestion-item *ngFor="let suggestion of suggestions"
+    [suggestion]="suggestion"
+    [searchType]="searchType"
+  ></app-suggestion-item>
+</mat-list>

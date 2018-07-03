@@ -9,6 +9,9 @@ import {MatSelectModule} from '@angular/material/select';
 import { MatListModule, MatIconModule } from "@angular/material";
 
 import { SearchBoxComponent } from './search-box.component';
+import { SuggestionListComponent } from './suggestion-list/suggestion-list.component';
+import { SuggestionItemComponent } from './suggestion-list/suggestion-item/suggestion-item.component';
+import { SuggestionService } from './suggestion.service';
 
 @NgModule({
   imports: [
@@ -26,6 +29,9 @@ import { SearchBoxComponent } from './search-box.component';
   exports: [
     SearchBoxComponent,
   ],
-  declarations: [SearchBoxComponent]
+  providers: [
+    SuggestionService,
+  ],
+  declarations: [SearchBoxComponent, SuggestionListComponent, SuggestionItemComponent]
 })
 export class SearchBoxModule { }

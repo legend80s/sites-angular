@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { debounce } from "lodash";
 import { Engines, VideoEngineService, SearchDriver, SearchType, ISuggestion } from '../video-engine.service';
+import { SuggestionService } from './suggestion.service';
 
 const SEARCH_PAGE_CONFIG = {
   [Engines.Youku]: {
@@ -31,9 +32,15 @@ export class SearchBoxComponent implements OnInit {
   public searchType = SearchType.Hot // 默认显示热搜
   public search: Function;
 
-  constructor(private videoEngineService: VideoEngineService) {
+  constructor(
+    private videoEngineService: VideoEngineService,
+    private suggestionService: SuggestionService
+  ) {
     this.driver = this.videoEngineService.getInstance(this.currentEngine);
     this.search = debounce(this.undebouncedSearch, 500);
+
+    suggestionService.query$.subscribe((query: string) => this.setQuery(query));
+    suggestionService.toSearchPageQuery$.subscribe((query: string) => this.toSearchPage(query));
   }
 
   /**
@@ -43,14 +50,14 @@ export class SearchBoxComponent implements OnInit {
     this.showHottest();
   }
 
-  public setQuery(query) {
+  private setQuery(query) {
     if (this.query !== query) {
       this.query = query;
       this.showSuggestions(query)
     }
   }
 
-  public toSearchPage(query: string) {
+  private toSearchPage(query: string) {
     const newWindow = window.open(SEARCH_PAGE_CONFIG[this.currentEngine].url + query);
 
     newWindow.opener = null;

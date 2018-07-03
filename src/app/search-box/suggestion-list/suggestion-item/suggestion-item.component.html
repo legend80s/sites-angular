@@ -1,0 +1,13 @@
+<mat-list-item
+  class="item"
+  (click)="toSearchPage(suggestion.value)">
+
+  <!-- 只有热搜有序号 -->
+  <span
+    *ngIf="searchType === SearchType.Hot"
+    class="rank rank-{{suggestion.index + 1}}"
+  >{{ suggestion.index + 1 }}</span>
+  {{ suggestion.value }}
+  <mat-icon class="adder" (click)="setQuery(suggestion.value);$event.stopPropagation()">add</mat-icon>
+
+</mat-list-item>
