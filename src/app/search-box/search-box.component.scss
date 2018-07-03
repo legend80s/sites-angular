@@ -11,7 +11,7 @@
     width: 14%;
   }
 
-  .suggestion-list {
+  .results {
     position: absolute;
     width: 100%;
     padding-top: 0;
@@ -26,11 +26,26 @@
       }
     }
 
-    .suggestion {
+    .item {
       cursor: pointer;
 
       &:hover {
         background-color: #eee;
+
+        .adder {
+          display: inline-block;
+        }
+      }
+
+      .adder {
+        display: none;
+        position: absolute;
+        right: 16px;
+        color: #cacaca;
+
+        &:hover {
+          color: #808080;
+        }
       }
     }
   }

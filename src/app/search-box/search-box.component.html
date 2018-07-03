@@ -23,14 +23,18 @@
   <mat-list
     dense
     *ngIf="suggestions.length"
-    class="suggestion-list"
+    class="results"
     [ngClass]="{'hot': searchType === SearchType.Hot, 'suggestion': searchType === SearchType.Suggestion}"
   >
     <mat-list-item
-      class="suggestion"
+      class="item"
       *ngFor="let suggestion of suggestions"
-      (click)="onSuggestionClick(suggestion)">
-      <span class="rank rank-{{suggestion.index + 1}}">{{ suggestion.index + 1 }}</span>{{ suggestion.value }}
+      (click)="toSearchPage(suggestion.value)">
+
+      <span class="rank rank-{{suggestion.index + 1}}">{{ suggestion.index + 1 }}</span>
+      {{ suggestion.value }}
+      <mat-icon class="adder" (click)="setQuery(suggestion.value);$event.stopPropagation()">add_circle_outline</mat-icon>
+
     </mat-list-item>
   </mat-list>
 </div>

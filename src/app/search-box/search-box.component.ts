@@ -43,10 +43,10 @@ export class SearchBoxComponent implements OnInit {
     this.showHottest();
   }
 
-  public onSuggestionClick(suggestion: ISuggestion) {
-    if (this.query !== suggestion.value) {
-      this.query = suggestion.value;
-      this.showSuggestions(this.query)
+  public setQuery(query) {
+    if (this.query !== query) {
+      this.query = query;
+      this.showSuggestions(query)
     }
   }
 
