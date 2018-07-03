@@ -26,7 +26,12 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public currentEngine = SearchBoxComponent.DEFAULT_ENGINE;
 
   public suggestions: ISuggestion[] = [];
-  private hots: ISuggestion[];
+
+  // cache 各引擎的热搜
+  private hottestCache: {
+    [propKey: string]: ISuggestion[]
+  } = {};
+
   private driver: SearchDriver;
 
   public SearchType = SearchType
@@ -85,7 +90,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     if (this.query) {
       this.showSuggestions(this.query)
     } else {
-      this.fetchHottest();
+      this.showHottest();
     }
   }
 
@@ -105,17 +110,21 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
    */
   private showHottest(): void {
     this.searchType = SearchType.Hot;
+    const cache = this.hottestCache[this.currentEngine];
 
-    if (this.hots) {
-      this.suggestions = this.hots;
+    if (cache) {
+      console.log(`got ${Engines[this.currentEngine]}'s hottest from cache`, cache);
+
+      this.suggestions = cache;
     } else {
-     this.fetchHottest();
+      console.log(`got nothing from ${Engines[this.currentEngine]}'s hottest cache, try to fetch it through network`);
+      this.fetchHottest();
     }
   }
 
   private fetchHottest(): void {
     this.driver.getHottest().subscribe(data => {
-      this.suggestions = this.hots = data;
+      this.suggestions = this.hottestCache[this.currentEngine] = data;
     });
   }
 
