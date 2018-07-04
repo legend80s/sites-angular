@@ -48,8 +48,12 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.driver = this.videoEngineService.getInstance(this.currentEngine);
     this.search = debounce(this.undebouncedSearch, 500);
 
-    this.querySubscription = suggestionService.query$.subscribe((query: string) => this.setQuery(query));
-    this.toSearchPageQuerySubscription = suggestionService.toSearchPageQuery$.subscribe((query: string) => this.toSearchPage(query));
+    this.querySubscription = suggestionService.query$.subscribe(
+      (query: string) => this.setQuery(query)
+    );
+    this.toSearchPageQuerySubscription = suggestionService.toSearchPageQuery$.subscribe(
+      (query: string) => this.toSearchPage(query)
+    );
   }
 
   /**
