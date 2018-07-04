@@ -1,0 +1,44 @@
+.video-center {
+  .video-profile {
+    display: inline-block;
+    height: 198px;
+    padding: 2px 2px 50px 2px;
+    margin: 10px;
+    position: relative;
+    border-radius: 3px;
+    border: 2px solid #ccc;
+
+    &:hover {
+      border: 2px solid #FF7800;
+      background-color: #FF7800;
+
+      a {
+        color: #fff;
+      }
+    }
+
+    .subtitle {
+      position: relative;
+      top: -18px;
+      font-size: 12px;
+      background: rgba(51, 51, 51, 0.64);
+      clear: both;
+      height: 18px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .title {
+      position: relative;
+      bottom: 12px;
+      text-align: center;
+
+      font-size: 14px;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 124px;
+      white-space: nowrap;
+    }
+  }
+}
