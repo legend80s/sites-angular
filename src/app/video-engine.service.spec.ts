@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { VideoEngineService } from './video-engine.service';
+import { VideoSearchDriverService } from './video-engine.service';
 
 describe('VideoEngineService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [VideoEngineService]
+      providers: [VideoSearchDriverService]
     });
   });
 
-  it('should be created', inject([VideoEngineService], (service: VideoEngineService) => {
+  it('should be created', inject([VideoSearchDriverService], (service: VideoSearchDriverService) => {
     expect(service).toBeTruthy();
   }));
 });
