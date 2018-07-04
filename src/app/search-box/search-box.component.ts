@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { debounce } from "lodash";
-import { Engines, VideoEngineService, SearchDriver, SearchType, ISuggestion } from '../video-engine.service';
+import { Engines, VideoSearchDriverService, SearchDriver, SearchType, ISuggestion } from '../video-engine.service';
 import { SuggestionService } from './suggestion.service';
 import { Subscription } from 'rxjs';
 
@@ -42,10 +42,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   toSearchPageQuerySubscription: Subscription;
 
   constructor(
-    private videoEngineService: VideoEngineService,
+    private videoSearchDriverService: VideoSearchDriverService,
     private suggestionService: SuggestionService
   ) {
-    this.driver = this.videoEngineService.getInstance(this.currentEngine);
+    this.driver = this.videoSearchDriverService.getInstance(this.currentEngine);
     this.search = debounce(this.undebouncedSearch, 500);
 
     this.querySubscription = suggestionService.query$.subscribe(
@@ -89,7 +89,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public changeEngine(): void {
     console.log('this.currentEngine:', this.currentEngine);
-    this.driver = this.videoEngineService.getInstance(this.currentEngine);
+    this.driver = this.videoSearchDriverService.getInstance(this.currentEngine);
 
     if (this.query) {
       this.showSuggestions(this.query)

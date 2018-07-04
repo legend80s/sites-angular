@@ -196,7 +196,7 @@ const ENGINE_CONFIGS: IEngineConfig[] = [
 @Injectable({
   providedIn: 'root'
 })
-export class VideoEngineService {
+export class VideoSearchDriverService {
   private cache = {};
   private constructor(private http: HttpClient) {}
 
