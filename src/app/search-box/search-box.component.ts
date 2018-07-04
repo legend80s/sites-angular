@@ -60,16 +60,19 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('document:click', ['$event'])
-  onClick($event: MouseEvent) {
+  closeSuggestionList($event: MouseEvent) {
     const targetElement = $event.target as HTMLElement;
 
     if (!this.searchBoxElement.contains(targetElement)) {
       console.log('click outside of the component');
       this.searchBoxElement.classList.add('hide-suggestion-list');
-    } else {
-      console.log('click in the component');
-      this.searchBoxElement.classList.remove('hide-suggestion-list');
     }
+  }
+
+  @HostListener('click')
+  openSuggestionList() {
+    console.log('click in the component');
+    this.searchBoxElement.classList.remove('hide-suggestion-list');
   }
 
   /**
