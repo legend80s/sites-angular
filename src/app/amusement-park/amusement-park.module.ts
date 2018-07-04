@@ -5,7 +5,7 @@ import { SurfingCenterComponent } from './surfing-center/surfing-center.componen
 import { VideoCenterComponent } from './video-center/video-center.component';
 import { NewsCenterComponent } from './news-center/news-center.component';
 
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material';
 
 @NgModule({
   imports: [
