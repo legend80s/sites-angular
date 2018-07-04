@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { debounce } from "lodash";
 import { Engines, VideoSearchDriverService, SearchDriver, SearchType, ISuggestion } from '../video-search-driver.service';
 import { SuggestionService } from './suggestion.service';
@@ -41,9 +41,12 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   querySubscription: Subscription;
   toSearchPageQuerySubscription: Subscription;
 
+  private searchBoxElement: HTMLElement;
+
   constructor(
     private videoSearchDriverService: VideoSearchDriverService,
-    private suggestionService: SuggestionService
+    private suggestionService: SuggestionService,
+    private elementRef: ElementRef
   ) {
     this.driver = this.videoSearchDriverService.getInstance(this.currentEngine);
     this.search = debounce(this.undebouncedSearch, 500);
@@ -56,10 +59,27 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     );
   }
 
+  @HostListener('document:click', ['$event'])
+  onClick($event: MouseEvent) {
+    const targetElement = $event.target as HTMLElement;
+
+    if (!this.searchBoxElement.contains(targetElement)) {
+      console.log('click outside of the component');
+      this.searchBoxElement.classList.add('hide-suggestion-list');
+    } else {
+      console.log('click in the component');
+      this.searchBoxElement.classList.remove('hide-suggestion-list');
+    }
+  }
+
   /**
    * 默认显示热搜
    */
   ngOnInit() {
+    // 默认不显示下拉提示
+    this.searchBoxElement = (this.elementRef.nativeElement as HTMLElement).querySelector('.search-box');
+    this.searchBoxElement.classList.add('hide-suggestion-list');
+
     this.showHottest();
   }
 
