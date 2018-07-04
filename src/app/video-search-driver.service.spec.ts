@@ -1,8 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { VideoSearchDriverService } from './video-engine.service';
+import { VideoSearchDriverService } from './video-search-driver.service';
 
-describe('VideoEngineService', () => {
+describe('VideoSearchDriverService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [VideoSearchDriverService]

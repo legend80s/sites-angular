@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { SearchType, ISuggestion } from '../../video-engine.service';
+import { SearchType, ISuggestion } from '../../video-search-driver.service';
 
 @Component({
   selector: 'app-suggestion-list',

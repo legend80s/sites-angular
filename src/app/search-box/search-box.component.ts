@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { debounce } from "lodash";
-import { Engines, VideoSearchDriverService, SearchDriver, SearchType, ISuggestion } from '../video-engine.service';
+import { Engines, VideoSearchDriverService, SearchDriver, SearchType, ISuggestion } from '../video-search-driver.service';
 import { SuggestionService } from './suggestion.service';
 import { Subscription } from 'rxjs';
 
