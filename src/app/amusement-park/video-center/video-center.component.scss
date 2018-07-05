@@ -1,4 +1,6 @@
 .video-center {
+  background-color: rgba(17, 117, 109, 0.9);
+
   .video-profile {
     display: inline-block;
     height: 198px;
@@ -11,10 +13,6 @@
     &:hover {
       border: 2px solid #FF7800;
       background-color: #FF7800;
-
-      a {
-        color: #fff;
-      }
     }
 
     .subtitle {
@@ -39,6 +37,10 @@
       text-overflow: ellipsis;
       width: 124px;
       white-space: nowrap;
+
+      a {
+        color: #fff;
+      }
     }
   }
 }
