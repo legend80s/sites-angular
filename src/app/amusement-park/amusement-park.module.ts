@@ -5,16 +5,25 @@ import { SurfingCenterComponent } from './surfing-center/surfing-center.componen
 import { VideoCenterComponent } from './video-center/video-center.component';
 import { NewsCenterComponent } from './news-center/news-center.component';
 
-import { MatTabsModule } from '@angular/material';
+import { MatTabsModule, MatPaginatorModule } from '@angular/material';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    SharedModule,
+
     MatTabsModule,
+    MatPaginatorModule,
   ],
   exports: [
     AmusementParkComponent,
   ],
-  declarations: [AmusementParkComponent, SurfingCenterComponent, VideoCenterComponent, NewsCenterComponent]
+  declarations: [
+    AmusementParkComponent,
+    SurfingCenterComponent,
+    VideoCenterComponent,
+    NewsCenterComponent,
+  ]
 })
 export class AmusementParkModule { }

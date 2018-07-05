@@ -1,21 +1,29 @@
 <div class="video-center container-fluid">
-  <div class="video-profile" *ngFor="let video of videos | async">
-    <div>
-      <a href="{{ video.url }}" rel="noopener noreferer" target="_blank">
-        <img
-          class="video-img"
-          width="124"
-          height="160"
-          src="{{ video.img.src }}"
-          alt="{{ video.img.alt }}"
-        />
-      </a>
+  <section class="util">
+    <app-from text="360搜索综艺排行榜" url="https://www.360kan.com/zongyi/index.html"></app-from>
 
-      <div class="subtitle">{{ video.subtitle }}</div>
-    </div>
+    <mat-paginator
+      class="paginator"
+      [length]="TOTAL"
+      [pageSize]="PAGE_SIZE"
+      hidePageSize="true"
+      (page)="showPage($event.pageIndex)">
+    </mat-paginator>
+  </section>
 
-    <div class="title">
-      <a href="{{ video.url }}" rel="noopener noreferer" target="_blank" title="{{ video.description }}">{{ video.title }}</a>
+  <section>
+    <div class="video-profile" *ngFor="let video of videos | async">
+      <div>
+        <a href="{{ video.url }}" rel="noopener noreferer" target="_blank">
+          <img class="video-img" width="124" height="160" src="{{ video.img.src }}" alt="{{ video.img.alt }}" />
+        </a>
+
+        <div class="subtitle">{{ video.subtitle }}</div>
+      </div>
+
+      <div class="title">
+        <a href="{{ video.url }}" rel="noopener noreferer" target="_blank" title="{{ video.description }}">{{ video.title }}</a>
+      </div>
     </div>
-  </div>
+  </section>
 </div>

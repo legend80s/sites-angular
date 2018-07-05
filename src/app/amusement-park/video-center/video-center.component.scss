@@ -1,6 +1,22 @@
 .video-center {
   background-color: rgba(17, 117, 109, 0.9);
 
+  .util {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+
+    app-from {
+      margin-left: 10px;
+    }
+
+    .paginator {
+      background: none;
+      color: #fff;
+    }
+  }
+
   .video-profile {
     display: inline-block;
     height: 198px;
