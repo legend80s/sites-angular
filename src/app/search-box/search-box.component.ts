@@ -14,6 +14,9 @@ const SEARCH_PAGE_CONFIG = {
   [Engines.Baidu]: {
     url: 'https://www.baidu.com/s?ie=UTF-8&wd='
   },
+  [Engines.Google]: {
+    url: 'https://www.google.com.hk/search?q='
+  }
 }
 
 @Component({
@@ -28,13 +31,17 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       value: '百度',
     },
     {
+      id: Engines.Google,
+      value: '谷歌',
+    },
+    {
       id: Engines.Youku,
       value: '优酷',
     },
     {
       id: Engines.Tencent,
       value: '腾讯视频',
-    }
+    },
   ];
 
   query = ''

@@ -13,6 +13,7 @@ export enum Engines {
   Youku,
   Tencent,
   Baidu,
+  Google,
 };
 
 export interface ISuggestion {
@@ -209,6 +210,24 @@ const ENGINE_CONFIGS: IEngineConfig[] = [
 
         return items.map(
           (value, index) => ({ index, value })
+        )
+      },
+    }
+  },
+
+  // Google
+  {
+    id: Engines.Google,
+    suggestion: {
+      url: 'https://www.google.com.hk/complete/search?client=psy-ab&hl=zh-CN&gs_rn=64&gs_ri=psy-ab&cp=1&gs_id=94bu',
+      callbackParam: 'jsonp',
+      keyword: 'q',
+      format: (response) => {
+        console.log('response in format of Google suggesion:', response);
+        const items = response[1];
+
+        return items.map(
+          ([value], index) => ({ index, value })
         )
       },
     }
