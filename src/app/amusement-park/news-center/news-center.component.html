@@ -1,3 +1,9 @@
-<p>
-  news-center works!
-</p>
+<div class="ted-list">
+  <div class="ted-profile" *ngFor="let ted of teds | async">
+      <a href="{{ ted.url }}" target="_blank" rel="noopener">
+        <img src="{{ ted.img.src }}" alt="{{ ted.title }}">
+      </a>
+
+      <p>{{ ted.title }}</p>
+  </div>
+</div>
