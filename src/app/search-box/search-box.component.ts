@@ -19,13 +19,18 @@ const SEARCH_PAGE_CONFIG = {
   }
 }
 
+interface IEngineOption {
+  id: Engines,
+  value: string,
+};
+
 @Component({
   selector: 'app-search-box',
   templateUrl: './search-box.component.html',
   styleUrls: ['./search-box.component.scss']
 })
 export class SearchBoxComponent implements OnInit, OnDestroy {
-  EngineMap = [
+  engineOptions: IEngineOption[] = [
     {
       id: Engines.Baidu,
       value: '百度',
@@ -46,7 +51,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   query = ''
   Engines = Engines
-  currentEngine = this.EngineMap[0].id;
+  currentEngine = this.engineOptions[0].id;
 
   suggestions: ISuggestion[] = [];
 

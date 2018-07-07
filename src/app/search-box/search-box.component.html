@@ -6,7 +6,7 @@
 
     <mat-form-field class="engines-wrapper">
       <mat-select [(value)]="currentEngine" (selectionChange)="changeEngine()">
-        <mat-option *ngFor="let engine of EngineMap" [(value)]="engine.id">{{ engine.value }}</mat-option>
+        <mat-option *ngFor="let engine of engineOptions" [(value)]="engine.id">{{ engine.value }}</mat-option>
       </mat-select>
     </mat-form-field>
 
