@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+
 
 export enum SearchType {
   Hot, // 热搜
@@ -11,6 +12,7 @@ export enum SearchType {
 export enum Engines {
   Youku,
   Tencent,
+  Baidu,
 };
 
 export interface ISuggestion {
@@ -38,7 +40,7 @@ interface ISuggestionConfig extends ISearchConfig {
 
 interface IEngineConfig {
   id: Engines,
-  hot: ISearchConfig,
+  hot?: ISearchConfig,
   suggestion: ISuggestionConfig,
 }
 
@@ -64,7 +66,9 @@ class MyHttpClient extends HttpClient {
 class HotEngine implements IHotSearchable {
   constructor(private http: MyHttpClient, private config: ISearchConfig) {}
 
-  search() {
+  search(): Observable<ISuggestion[]> {
+    if (!this.config) { return of([]); }
+
     return this.http.jsonp(`${this.config.url}`, this.config.callbackParam)
       .pipe(
         map(response => this.config.format(response))
@@ -77,7 +81,7 @@ class SuggestionEngine implements ISuggestionSearchable {
     this.config = config;
   }
 
-  search(query: string) {
+  search(query: string): Observable<ISuggestion[]> {
     const config = this.config;
 
     const prefix = config.url.includes('?') ? '&' : '?';
@@ -134,6 +138,10 @@ interface ITencentSuggestionResult {
   ]
 }
 
+interface IBaiduSuggestionResult {
+  s: string[],
+}
+
 const ENGINE_CONFIGS: IEngineConfig[] = [
   // 优酷
   {
@@ -183,6 +191,24 @@ const ENGINE_CONFIGS: IEngineConfig[] = [
 
         return !item ? [] : item.map(
           ({ word }, index) => ({ index, value: word })
+        )
+      },
+    }
+  },
+
+  // 百度搜索
+  {
+    id: Engines.Baidu,
+    suggestion: {
+      url: 'http://suggestion.baidu.com/su?ie=utf-8&json=1&p=3',
+      callbackParam: 'cb',
+      keyword: 'wd',
+      format: (response) => {
+        console.log('response in format of Baidu suggesion:', response);
+        const items = (<IBaiduSuggestionResult>response).s;
+
+        return items.map(
+          (value, index) => ({ index, value })
         )
       },
     }

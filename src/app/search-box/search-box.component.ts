@@ -10,7 +10,10 @@ const SEARCH_PAGE_CONFIG = {
   },
   [Engines.Tencent]: {
     url: 'https://v.qq.com/x/search/?q='
-  }
+  },
+  [Engines.Baidu]: {
+    url: 'https://www.baidu.com/s?ie=UTF-8&wd='
+  },
 }
 
 @Component({
@@ -19,13 +22,26 @@ const SEARCH_PAGE_CONFIG = {
   styleUrls: ['./search-box.component.scss']
 })
 export class SearchBoxComponent implements OnInit, OnDestroy {
-  private static DEFAULT_ENGINE = Engines.Youku
+  EngineMap = [
+    {
+      id: Engines.Baidu,
+      value: '百度',
+    },
+    {
+      id: Engines.Youku,
+      value: '优酷',
+    },
+    {
+      id: Engines.Tencent,
+      value: '腾讯视频',
+    }
+  ];
 
-  public query = ''
-  public Engines = Engines
-  public currentEngine = SearchBoxComponent.DEFAULT_ENGINE;
+  query = ''
+  Engines = Engines
+  currentEngine = this.EngineMap[0].id;
 
-  public suggestions: ISuggestion[] = [];
+  suggestions: ISuggestion[] = [];
 
   // cache 各引擎的热搜
   private hottestCache: {
@@ -34,9 +50,9 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private driver: SearchDriver;
 
-  public SearchType = SearchType
-  public searchType = SearchType.Hot // 默认显示热搜
-  public search: Function;
+  SearchType = SearchType
+  searchType = SearchType.Hot // 默认显示热搜
+  search: Function;
 
   querySubscription: Subscription;
   toSearchPageQuerySubscription: Subscription;
@@ -151,6 +167,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private fetchHottest(): void {
     this.driver.getHottest().subscribe(data => {
+      // console.log('data in getHottest subscribe', data);
+
       this.suggestions = this.hottestCache[this.currentEngine] = data;
     });
   }
