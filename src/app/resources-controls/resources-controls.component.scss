@@ -1,0 +1,15 @@
+.resources-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+
+  app-from {
+    margin-left: 10px;
+  }
+
+  .paginator {
+    background: none;
+    color: #fff;
+  }
+}

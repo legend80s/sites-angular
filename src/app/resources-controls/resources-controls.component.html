@@ -1,0 +1,12 @@
+<section class="resources-controls">
+  <app-from [text]="from.text" [url]="from.url"></app-from>
+
+  <mat-paginator
+    class="paginator"
+    [length]="pagination.total"
+    [pageSize]="pagination.pageSize"
+    hidePageSize="true"
+    showFirstLastButtons="true"
+    (page)="pagination.page($event.pageIndex + 1)">
+  </mat-paginator>
+</section>
