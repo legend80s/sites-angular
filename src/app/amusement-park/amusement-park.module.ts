@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AmusementParkComponent } from './amusement-park.component';
 import { SurfingCenterComponent } from './surfing-center/surfing-center.component';
 import { VideoCenterComponent } from './video-center/video-center.component';
-import { NewsCenterComponent } from './news-center/news-center.component';
+import { TedCenterComponent } from './ted-center/ted-center.component';
 
 import { MatTabsModule, MatPaginatorModule } from '@angular/material';
 import { SharedModule } from '../shared/shared.module';
@@ -23,7 +23,7 @@ import { SharedModule } from '../shared/shared.module';
     AmusementParkComponent,
     SurfingCenterComponent,
     VideoCenterComponent,
-    NewsCenterComponent,
+    TedCenterComponent,
   ]
 })
 export class AmusementParkModule { }

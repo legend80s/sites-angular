@@ -27,11 +27,11 @@ interface ITedResponse {
 
 // TODO 错误处理，拦截器 MatSnackBar
 @Component({
-  selector: 'app-news-center',
-  templateUrl: './news-center.component.html',
-  styleUrls: ['./news-center.component.scss']
+  selector: 'app-ted-center',
+  templateUrl: './ted-center.component.html',
+  styleUrls: ['./ted-center.component.scss']
 })
-export class NewsCenterComponent implements OnInit {
+export class TedCenterComponent implements OnInit {
   teds: Array<ITed[]>;
   static PAGE_SIZE = 12;
   static TOTAL_PAGES = 5;
@@ -39,8 +39,8 @@ export class NewsCenterComponent implements OnInit {
 
   from: IFrom = { text: 'TED - 网易公开课', url: 'https://open.163.com/ted' };
   pagination: IPagination = {
-    total: NewsCenterComponent.PAGE_SIZE * NewsCenterComponent.TOTAL_PAGES,
-    pageSize: NewsCenterComponent.PAGE_SIZE,
+    total: TedCenterComponent.PAGE_SIZE * TedCenterComponent.TOTAL_PAGES,
+    pageSize: TedCenterComponent.PAGE_SIZE,
     page: (pageIndex: number) => { this.showPage(pageIndex) },
   };
 
@@ -55,9 +55,9 @@ export class NewsCenterComponent implements OnInit {
     )
       .pipe(
         // 格式化
-        map(NewsCenterComponent.format),
+        map(TedCenterComponent.format),
         // 分页
-        map(NewsCenterComponent.paginate)
+        map(TedCenterComponent.paginate)
       )
       .subscribe(teds => this.teds = teds);
   }
@@ -86,12 +86,12 @@ export class NewsCenterComponent implements OnInit {
 
     const teds = [];
 
-    for (let page = 0; page < NewsCenterComponent.TOTAL_PAGES; page += 1) {
+    for (let page = 0; page < TedCenterComponent.TOTAL_PAGES; page += 1) {
       // console.log('page:', page);
       // console.log('NewsCenterComponent.PAGE_SIZE:', NewsCenterComponent.PAGE_SIZE);
       // console.log('page * NewsCenterComponent.PAGE_SIZE:', page * NewsCenterComponent.PAGE_SIZE);
       // console.log('(page + 1) * NewsCenterComponent.PAGE_SIZE:', (page + 1) * NewsCenterComponent.PAGE_SIZE);
-      const sliced = videos.slice(page * NewsCenterComponent.PAGE_SIZE, (page + 1) * NewsCenterComponent.PAGE_SIZE);
+      const sliced = videos.slice(page * TedCenterComponent.PAGE_SIZE, (page + 1) * TedCenterComponent.PAGE_SIZE);
       // console.log('sliced:', sliced);
 
       teds.push(sliced);
