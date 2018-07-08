@@ -85,8 +85,8 @@ export class VideoCenterComponent implements OnInit {
   }
 
   showPage(pageIndex: number) {
-    console.log('fetch at page:', pageIndex);
+    console.log('fetch at page:', pageIndex + 1);
 
-    this.fetchVideos(pageIndex);
+    this.fetchVideos(pageIndex + 1);
   }
 }
