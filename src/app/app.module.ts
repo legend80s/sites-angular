@@ -22,7 +22,7 @@ class MatPaginatorChinese extends MatPaginatorIntl {
 
     length = Math.max(length, 0);
 
-    return `第 ${page + 1} 页，共 ${length} 条`;
+    return `第 ${page + 1} / ${length / pageSize} 页，共 ${length} 条`;
   };
 }
 
