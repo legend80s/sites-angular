@@ -1,0 +1,17 @@
+.ted-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.ted-profile {
+  flex-basis: 24%;
+}
+
+img {
+  width: 100%;
+}
+
+p {
+  font-size: 12px;
+}

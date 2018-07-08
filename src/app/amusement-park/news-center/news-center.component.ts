@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { IPagination, IFrom } from 'src/app/resources-controls/resources-controls.component';
 
 interface ITed {
   title: string,
@@ -24,32 +25,80 @@ interface ITedResponse {
   data: IRawTed[]
 }
 
+// TODO 错误处理，拦截器 MatSnackBar
 @Component({
   selector: 'app-news-center',
   templateUrl: './news-center.component.html',
   styleUrls: ['./news-center.component.scss']
 })
 export class NewsCenterComponent implements OnInit {
-  teds: Observable<ITed[]>;
+  teds: Array<ITed[]>;
+  static PAGE_SIZE = 12;
+  static TOTAL_PAGES = 5;
+  pageIndex: number = 0;
 
-  constructor(private http: HttpClient) { }
+  from: IFrom = { text: 'TED - 网易公开课', url: 'https://open.163.com/ted' };
+  pagination: IPagination = {
+    total: NewsCenterComponent.PAGE_SIZE * NewsCenterComponent.TOTAL_PAGES,
+    pageSize: NewsCenterComponent.PAGE_SIZE,
+    page: (pageIndex: number) => { this.showPage(pageIndex) },
+  };
+
+  constructor(private http: HttpClient) {
+  }
 
   ngOnInit() {
-    this.teds = this.http.jsonp('https://so.open.163.com/getMovieListByType.htm?pagesize=12', 'callback')
+    // 获取所有的 TED 视频
+    this.http.jsonp(
+      `https://so.open.163.com/getMovieListByType.htm?pagesize=${this.pagination.total}`,
+      'callback'
+    )
       .pipe(
-        map(response => {
-          console.log('response:', response);
+        // 格式化
+        map(NewsCenterComponent.format),
+        // 分页
+        map(NewsCenterComponent.paginate)
+      )
+      .subscribe(teds => this.teds = teds);
+  }
 
-          const items = (response as ITedResponse).data;
+  private showPage(pageIndex: number): void {
+    console.log('show page index', pageIndex);
+    this.pageIndex = pageIndex;
+  }
 
-          return items.map(({ pageurl, title, imgpath }) => ({
-            title,
-            url: pageurl,
-            img: {
-              src: `http://vimg1.ws.126.net${imgpath}.jpg`
-            }
-          }));
-        })
-      );
+  private static format(response: ITedResponse): ITed[] {
+    // console.log('response in format:', response);
+
+    const items = response.data;
+
+    return items.map(({ pageurl, title, imgpath }) => ({
+      title,
+      url: pageurl,
+      img: {
+        src: `http://vimg1.ws.126.net${imgpath}.jpg`
+      }
+    }));
+  }
+
+  private static paginate(videos: ITed[]): Array<ITed[]> {
+    // console.log('videos in paginate', videos);
+
+    const teds = [];
+
+    for (let page = 0; page < NewsCenterComponent.TOTAL_PAGES; page += 1) {
+      // console.log('page:', page);
+      // console.log('NewsCenterComponent.PAGE_SIZE:', NewsCenterComponent.PAGE_SIZE);
+      // console.log('page * NewsCenterComponent.PAGE_SIZE:', page * NewsCenterComponent.PAGE_SIZE);
+      // console.log('(page + 1) * NewsCenterComponent.PAGE_SIZE:', (page + 1) * NewsCenterComponent.PAGE_SIZE);
+      const sliced = videos.slice(page * NewsCenterComponent.PAGE_SIZE, (page + 1) * NewsCenterComponent.PAGE_SIZE);
+      // console.log('sliced:', sliced);
+
+      teds.push(sliced);
+    }
+
+    console.log('teds after 人工分页', teds);
+
+    return teds;
   }
 }
