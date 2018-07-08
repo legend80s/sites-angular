@@ -1,18 +1,7 @@
-<div class="video-center container-fluid">
-  <section class="util">
-    <app-from text="360搜索综艺排行榜" url="https://www.360kan.com/zongyi/index.html"></app-from>
+<section class="resource-list-wrapper video-center ">
+  <app-resources-controls [from]="from" [pagination]="pagination"></app-resources-controls>
 
-    <mat-paginator
-      class="paginator"
-      [length]="TOTAL"
-      [pageSize]="PAGE_SIZE"
-      hidePageSize="true"
-      showFirstLastButtons="true"
-      (page)="showPage($event.pageIndex)">
-    </mat-paginator>
-  </section>
-
-  <section>
+  <div>
     <div class="video-profile" *ngFor="let video of videos | async">
       <div>
         <a href="{{ video.url }}" rel="noopener noreferer" target="_blank">
@@ -26,5 +15,5 @@
         <a href="{{ video.url }}" rel="noopener noreferer" target="_blank" title="{{ video.description }}">{{ video.title }}</a>
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
