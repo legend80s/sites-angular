@@ -33,7 +33,7 @@ interface ITedResponse {
 })
 export class TedCenterComponent implements OnInit {
   teds: Array<ITed[]>;
-  static PAGE_SIZE = 12;
+  static PAGE_SIZE = 8;
   static TOTAL_PAGES = 5;
   pageIndex: number = 0;
 
