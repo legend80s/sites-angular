@@ -4,12 +4,6 @@
   <!-- <p>teds: {{ teds | json }}</p> -->
   <!-- <p>pageIndex: {{ pageIndex }}</p> -->
   <div class="ted-list" *ngIf="teds">
-    <div class="ted-profile" *ngFor="let ted of teds[pageIndex]">
-      <a href="{{ ted.url }}" target="_blank" rel="noopener">
-        <img src="{{ ted.img.src }}" alt="{{ ted.title }}">
-      </a>
-
-      <p>{{ ted.title }}</p>
-    </div>
+    <app-ted-profile *ngFor="let ted of teds[pageIndex]" [ted]="ted"></app-ted-profile>
   </div>
 </section>

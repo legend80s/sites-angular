@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { IPagination, IFrom } from 'src/app/resources-controls/resources-controls.component';
 
-interface ITed {
+export interface ITed {
   title: string,
   url: string,
   img: {

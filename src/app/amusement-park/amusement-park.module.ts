@@ -7,6 +7,7 @@ import { TedCenterComponent } from './ted-center/ted-center.component';
 
 import { MatTabsModule, MatPaginatorModule } from '@angular/material';
 import { SharedModule } from '../shared/shared.module';
+import { TedProfileComponent } from '../ted-profile/ted-profile.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { SharedModule } from '../shared/shared.module';
     SurfingCenterComponent,
     VideoCenterComponent,
     TedCenterComponent,
+    TedProfileComponent,
   ]
 })
 export class AmusementParkModule { }
