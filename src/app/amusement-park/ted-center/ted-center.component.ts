@@ -74,7 +74,7 @@ export class TedCenterComponent implements OnInit {
 
     return items.map(({ pageurl, title, imgpath }) => ({
       title,
-      url: pageurl,
+      url: `https://open.163.com${pageurl}`,
       img: {
         src: `http://vimg1.ws.126.net${imgpath}.jpg`
       }
