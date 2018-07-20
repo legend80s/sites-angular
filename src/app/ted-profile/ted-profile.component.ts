@@ -18,7 +18,7 @@ export class TedProfileComponent implements OnInit {
 
   tryToWatch(): void {
     this.dialog.open(TryToWatchDialogComponent, {
-      width: '500px',
+      width: '600px',
       data: this.ted,
     });
   }

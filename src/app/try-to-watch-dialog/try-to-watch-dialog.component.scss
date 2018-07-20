@@ -1,10 +1,14 @@
+// todo 弹窗北京图片磨砂效果
+
 h1 {
   font-size: 16px;
 }
 
-p {
+.img-title {
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin-bottom: .5em;
   font-size: 12px;
 }
 
@@ -12,6 +16,11 @@ mat-icon {
   margin-right: 2px;
 }
 
-button {
+.actions {
+  justify-content: flex-end;
   font-size: 14px;
+}
+
+img {
+  width: 100%;
 }
